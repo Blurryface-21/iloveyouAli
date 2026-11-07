@@ -20,24 +20,44 @@
   document.getElementById("toConstellation").addEventListener("click", () => showScreen("constellation"));
   document.getElementById("toLetter").addEventListener("click", () => showScreen("letter"));
   document.getElementById("finalButton").addEventListener("click", () => {
-    resetNoButton();
+    resetProposalButtons();
     showScreen("finale");
   });
 
   const btnYes = document.getElementById("btnYes");
   const btnNo = document.getElementById("btnNo");
+  let yesScale = 1;
+  let noScale = 1;
 
-  function resetNoButton() {
-    if (!btnNo) return;
-    btnNo.style.position = "";
-    btnNo.style.left = "";
-    btnNo.style.top = "";
-    btnNo.style.transform = "";
-    btnNo.style.zIndex = "";
+  function resetProposalButtons() {
+    yesScale = 1;
+    noScale = 1;
+    if (btnYes) {
+      btnYes.style.transform = "";
+      btnYes.style.zIndex = "";
+    }
+    if (btnNo) {
+      btnNo.style.position = "";
+      btnNo.style.left = "";
+      btnNo.style.top = "";
+      btnNo.style.transform = "";
+      btnNo.style.zIndex = "";
+    }
   }
 
-  function moveNoButton() {
+  function handleNoAction() {
     if (!btnNo) return;
+
+    // Escalar botones
+    noScale = Math.max(0.25, noScale - 0.15);
+    yesScale = Math.min(2.5, yesScale + 0.2);
+
+    if (btnYes) {
+      btnYes.style.transform = `scale(${yesScale})`;
+      btnYes.style.zIndex = "10";
+    }
+
+    // Mover botón No
     btnNo.style.position = "fixed";
     btnNo.style.zIndex = "100";
 
@@ -53,7 +73,7 @@
 
     btnNo.style.left = `${randomLeft}px`;
     btnNo.style.top = `${randomTop}px`;
-    btnNo.style.transform = "none";
+    btnNo.style.transform = `scale(${noScale})`;
   }
 
   const audio = document.getElementById("backgroundMusic");
@@ -104,12 +124,12 @@
   if (btnNo) {
     btnNo.addEventListener("click", (e) => {
       e.preventDefault();
-      moveNoButton();
+      handleNoAction();
     });
-    // Opcional para móviles y ratón al intentar tocarlo
+    // Para dispositivos móviles y toque táctil
     btnNo.addEventListener("touchstart", (e) => {
       e.preventDefault();
-      moveNoButton();
+      handleNoAction();
     }, { passive: false });
   }
   const restartBtn = document.getElementById("restartButton");
@@ -117,7 +137,7 @@
     restartBtn.addEventListener("click", () => {
       discovered.clear();
       updateProgress();
-      resetNoButton();
+      resetProposalButtons();
       document.querySelectorAll(".star-node").forEach(node => node.classList.remove("discovered"));
       stopTeAmoFx();
       if (celebrationAudio) {
@@ -130,7 +150,7 @@
   }
   document.getElementById("homeLink").addEventListener("click", event => {
     event.preventDefault();
-    resetNoButton();
+    resetProposalButtons();
     stopTeAmoFx();
     showScreen("intro");
   });

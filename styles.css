@@ -827,7 +827,8 @@ main {
   font-size: 14px;
   padding: 0 28px;
   min-width: 100px;
-  transition: transform .2s ease, background .25s, border-color .25s;
+  transition: transform .25s cubic-bezier(0.2, 0.8, 0.25, 1), background .25s, border-color .25s;
+  transform-origin: center center;
 }
 
 .answer-yes {
