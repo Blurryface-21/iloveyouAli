@@ -55,8 +55,47 @@
     btnNo.style.transform = "none";
   }
 
+  const audio = document.getElementById("backgroundMusic");
+  const celebrationAudio = document.getElementById("celebrationMusic");
+  const musicToggle = document.getElementById("musicToggle");
+  const musicLabel = document.getElementById("musicLabel");
+
+  function getActiveAudio() {
+    if (celebrationAudio && (!celebrationAudio.paused || celebrationAudio.currentTime > 0)) {
+      return celebrationAudio;
+    }
+    return audio;
+  }
+
+  function updateMusicButtonState() {
+    const currentAudio = getActiveAudio();
+    if (currentAudio && !currentAudio.paused) {
+      musicToggle.classList.add("playing");
+      musicToggle.setAttribute("aria-pressed", "true");
+      musicLabel.textContent = "Pausar música";
+    } else {
+      musicToggle.classList.remove("playing");
+      musicToggle.setAttribute("aria-pressed", "false");
+      musicLabel.textContent = "Activar música";
+    }
+  }
+
   if (btnYes) {
     btnYes.addEventListener("click", () => {
+      // Detener Lovebomb
+      if (audio) {
+        audio.pause();
+        audio.currentTime = 0;
+      }
+      // Reproducir Robot Voices inmediatamente y mantener en TE AMO
+      if (celebrationAudio) {
+        celebrationAudio.currentTime = 0;
+        celebrationAudio.play().then(() => {
+          updateMusicButtonState();
+        }).catch(err => {
+          console.info("Error al reproducir audio de celebración:", err);
+        });
+      }
       showScreen("teAmo");
     });
   }
@@ -79,6 +118,11 @@
       updateProgress();
       resetNoButton();
       document.querySelectorAll(".star-node").forEach(node => node.classList.remove("discovered"));
+      if (celebrationAudio) {
+        celebrationAudio.pause();
+        celebrationAudio.currentTime = 0;
+      }
+      updateMusicButtonState();
       showScreen("intro");
     });
   }
@@ -149,26 +193,19 @@
     });
   }
 
-  // Música: los navegadores móviles requieren una acción explícita.
-  const audio = document.getElementById("backgroundMusic");
-  const musicToggle = document.getElementById("musicToggle");
-  const musicLabel = document.getElementById("musicLabel");
   musicToggle.addEventListener("click", async () => {
-    if (audio.paused) {
+    const currentAudio = getActiveAudio();
+    if (currentAudio.paused) {
       try {
-        await audio.play();
-        musicToggle.classList.add("playing");
-        musicToggle.setAttribute("aria-pressed", "true");
-        musicLabel.textContent = "Pausar música";
+        await currentAudio.play();
+        updateMusicButtonState();
       } catch (error) {
-        musicLabel.textContent = "Añade tu canción";
-        console.info("No se pudo reproducir el audio. Comprueba assets/cancion.mp3.", error);
+        musicLabel.textContent = "Error al reproducir";
+        console.info("No se pudo reproducir el audio.", error);
       }
     } else {
-      audio.pause();
-      musicToggle.classList.remove("playing");
-      musicToggle.setAttribute("aria-pressed", "false");
-      musicLabel.textContent = "Activar música";
+      currentAudio.pause();
+      updateMusicButtonState();
     }
   });
 
