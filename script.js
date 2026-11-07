@@ -13,6 +13,7 @@
     window.scrollTo({ top: 0, behavior: "smooth" });
     if (id === "finale") createFinalStars();
     if (id === "letter") revealLetter();
+    if (id === "teAmo") triggerTeAmoSpectacularFx();
   }
 
   document.getElementById("beginButton").addEventListener("click", () => showScreen("journey"));
@@ -118,6 +119,7 @@
       updateProgress();
       resetNoButton();
       document.querySelectorAll(".star-node").forEach(node => node.classList.remove("discovered"));
+      stopTeAmoFx();
       if (celebrationAudio) {
         celebrationAudio.pause();
         celebrationAudio.currentTime = 0;
@@ -129,6 +131,7 @@
   document.getElementById("homeLink").addEventListener("click", event => {
     event.preventDefault();
     resetNoButton();
+    stopTeAmoFx();
     showScreen("intro");
   });
 
@@ -259,6 +262,106 @@
       star.style.setProperty("--duration", `${7 + Math.random() * 8}s`);
       star.style.setProperty("--delay", `${Math.random() * 8}s`);
       holder.appendChild(star);
+    }
+  }
+
+  // Efectos impactantes para la sección "TE AMO"
+  let shootingStarInterval = null;
+  const sparkSymbols = ["✦", "✧", "★", "✨", "❤"];
+
+  function triggerTeAmoSpectacularFx() {
+    stopTeAmoFx();
+    const fxLayer = document.getElementById("teAmoFxLayer");
+    const flashEl = document.getElementById("teAmoFlash");
+    if (!fxLayer) return;
+
+    // Destello de luz cósmica
+    if (flashEl) {
+      flashEl.classList.remove("flash-active");
+      void flashEl.offsetWidth; // forzar reflujo
+      flashEl.classList.add("flash-active");
+    }
+
+    // Explosión de destellos radiales y chispas doradas/violetas
+    const burstCount = reduceMotion ? 16 : 45;
+    for (let i = 0; i < burstCount; i++) {
+      createSparkle(fxLayer, i, burstCount);
+    }
+
+    // Lluvia de estrellas fugaces continua mientras esté en la pantalla
+    const launchShootingStar = () => {
+      if (currentScreen !== "teAmo") return;
+      const star = document.createElement("div");
+      star.className = "shooting-star";
+
+      // Posiciones aleatorias en el tercio superior o laterales
+      const startX = Math.random() * (window.innerWidth * 0.9);
+      const startY = Math.random() * (window.innerHeight * 0.45);
+      const length = 120 + Math.random() * 180;
+      const duration = 1.1 + Math.random() * 0.9;
+      const angle = 28 + Math.random() * 16; // trayectoria en diagonal atractiva
+
+      star.style.left = `${startX}px`;
+      star.style.top = `${startY}px`;
+      star.style.width = `${length}px`;
+      star.style.animationDuration = `${duration}s`;
+      star.style.transform = `rotate(${angle}deg)`;
+
+      fxLayer.appendChild(star);
+      setTimeout(() => star.remove(), duration * 1000 + 100);
+    };
+
+    // Lanzar varias ráfagas de estrellas fugaces al inicio
+    const initialBurst = reduceMotion ? 2 : 6;
+    for (let j = 0; j < initialBurst; j++) {
+      setTimeout(launchShootingStar, j * 260);
+    }
+
+    // Y mantener estrellas fugaces periódicas
+    shootingStarInterval = setInterval(() => {
+      if (currentScreen !== "teAmo") {
+        stopTeAmoFx();
+        return;
+      }
+      launchShootingStar();
+      if (Math.random() > 0.4) {
+        setTimeout(launchShootingStar, 200 + Math.random() * 300);
+      }
+    }, 1100);
+  }
+
+  function createSparkle(container, index, total) {
+    const el = document.createElement("div");
+    el.className = "cosmic-sparkle";
+    el.textContent = sparkSymbols[Math.floor(Math.random() * sparkSymbols.length)];
+
+    // Ángulo y distancia de dispersión radial
+    const angle = (index / total) * Math.PI * 2 + (Math.random() * 0.4 - 0.2);
+    const distance = 80 + Math.random() * (Math.min(window.innerWidth, window.innerHeight) * 0.42);
+    const tx = Math.cos(angle) * distance;
+    const ty = Math.sin(angle) * distance;
+    const duration = 1.2 + Math.random() * 1.5;
+    const size = 12 + Math.random() * 18;
+
+    el.style.setProperty("--tx", `${tx}px`);
+    el.style.setProperty("--ty", `${ty}px`);
+    el.style.setProperty("--scale-end", `${0.4 + Math.random() * 0.8}`);
+    el.style.fontSize = `${size}px`;
+    el.style.animationDuration = `${duration}s`;
+    el.style.animationDelay = `${Math.random() * 0.3}s`;
+
+    container.appendChild(el);
+    setTimeout(() => el.remove(), (duration + 0.5) * 1000);
+  }
+
+  function stopTeAmoFx() {
+    if (shootingStarInterval) {
+      clearInterval(shootingStarInterval);
+      shootingStarInterval = null;
+    }
+    const fxLayer = document.getElementById("teAmoFxLayer");
+    if (fxLayer) {
+      fxLayer.innerHTML = "";
     }
   }
 

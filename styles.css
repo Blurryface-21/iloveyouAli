@@ -865,6 +865,160 @@ main {
   cursor: pointer;
 }
 
+/* Efectos visuales de impacto en la sección Te Amo */
+#teAmo {
+  position: relative;
+  overflow: hidden;
+}
+
+#teAmo.active .final-heart {
+  animation: heartGlow 2.5s ease-in-out infinite, heartPulseImpact 1.2s cubic-bezier(0.18, 0.89, 0.32, 1.28) both;
+}
+
+#teAmo.active .final-title {
+  text-shadow: 0 0 25px rgba(220, 195, 255, 0.75), 0 0 50px rgba(160, 120, 255, 0.45);
+  animation: titleGlowEntrance 1.2s ease-out both;
+}
+
+.teamo-fx-layer {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1;
+  overflow: hidden;
+}
+
+.teamo-flash {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 3;
+  opacity: 0;
+  background: radial-gradient(circle at center, rgba(220, 205, 255, 0.45) 0%, rgba(142, 94, 220, 0.2) 40%, transparent 75%);
+}
+
+.teamo-flash.flash-active {
+  animation: flashPulse 1.4s ease-out forwards;
+}
+
+/* Estrellas fugaces */
+.shooting-star {
+  position: absolute;
+  height: 2px;
+  background: linear-gradient(90deg, #ffffff, rgba(200, 180, 255, 0.85), transparent);
+  filter: drop-shadow(0 0 8px #d4bfff) drop-shadow(0 0 16px #9d7dfd);
+  opacity: 0;
+  pointer-events: none;
+  border-radius: 999px;
+  transform-origin: left center;
+  animation: shootingStarTrajectory linear forwards;
+}
+
+.shooting-star::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: -2px;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #ffffff;
+  box-shadow: 0 0 12px 2px #ffffff, 0 0 22px 6px #c4a5ff;
+}
+
+/* Chispas y destellos radiales */
+.cosmic-sparkle {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  color: #f2ebff;
+  text-shadow: 0 0 10px #cba9ff, 0 0 20px #8665f5;
+  pointer-events: none;
+  user-select: none;
+  opacity: 0;
+  animation: cosmicSparkleAnim cubic-bezier(0.12, 0.75, 0.35, 1) forwards;
+}
+
+@keyframes flashPulse {
+  0% {
+    opacity: 0.9;
+    transform: scale(0.96);
+  }
+  40% {
+    opacity: 0.7;
+    transform: scale(1.02);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(1.1);
+  }
+}
+
+@keyframes heartPulseImpact {
+  0% {
+    transform: scale(0.3);
+    opacity: 0;
+  }
+  60% {
+    transform: scale(1.18);
+    opacity: 1;
+  }
+  80% {
+    transform: scale(0.95);
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes titleGlowEntrance {
+  0% {
+    opacity: 0;
+    transform: scale(0.85) translateY(18px);
+    filter: blur(8px);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+    filter: blur(0);
+  }
+}
+
+@keyframes shootingStarTrajectory {
+  0% {
+    transform: rotate(var(--angle, 35deg)) translateX(0);
+    opacity: 0;
+  }
+  15% {
+    opacity: 1;
+  }
+  75% {
+    opacity: 0.9;
+  }
+  100% {
+    transform: rotate(var(--angle, 35deg)) translateX(550px);
+    opacity: 0;
+  }
+}
+
+@keyframes cosmicSparkleAnim {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, -50%) translate(0, 0) scale(0.2) rotate(0deg);
+  }
+  25% {
+    opacity: 1;
+  }
+  75% {
+    opacity: 0.8;
+  }
+  100% {
+    opacity: 0;
+    transform: translate(-50%, -50%) translate(var(--tx), var(--ty)) scale(var(--scale-end, 1)) rotate(180deg);
+  }
+}
+
 .confetti-stars {
   position: absolute;
   inset: 0;
