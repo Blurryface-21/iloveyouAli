@@ -229,8 +229,16 @@ a:focus-visible {
 }
 
 @keyframes peekPulse {
-  0% { transform: scale(0.9); opacity: 0.8; }
-  100% { transform: scale(1.2); opacity: 1; text-shadow: 0 0 10px #ffffff, 0 0 18px #d4bfff; }
+  0% {
+    transform: scale(0.9);
+    opacity: 0.8;
+  }
+
+  100% {
+    transform: scale(1.2);
+    opacity: 1;
+    text-shadow: 0 0 10px #ffffff, 0 0 18px #d4bfff;
+  }
 }
 
 .player-header {
@@ -292,13 +300,29 @@ a:focus-visible {
   animation: soundBars 1.2s ease-in-out infinite alternate;
 }
 
-.player-wave span:nth-child(1) { animation-delay: 0.1s; height: 40%; }
-.player-wave span:nth-child(2) { animation-delay: 0.3s; height: 90%; }
-.player-wave span:nth-child(3) { animation-delay: 0.2s; height: 60%; }
+.player-wave span:nth-child(1) {
+  animation-delay: 0.1s;
+  height: 40%;
+}
+
+.player-wave span:nth-child(2) {
+  animation-delay: 0.3s;
+  height: 90%;
+}
+
+.player-wave span:nth-child(3) {
+  animation-delay: 0.2s;
+  height: 60%;
+}
 
 @keyframes soundBars {
-  0% { height: 25%; }
-  100% { height: 100%; }
+  0% {
+    height: 25%;
+  }
+
+  100% {
+    height: 100%;
+  }
 }
 
 .player-progress-container {
@@ -1133,11 +1157,11 @@ main {
   pointer-events: none;
   z-index: 3;
   opacity: 0;
-  background: radial-gradient(circle at center, rgba(220, 205, 255, 0.45) 0%, rgba(142, 94, 220, 0.2) 40%, transparent 75%);
+  background: radial-gradient(circle at center, rgba(230, 215, 255, 0.55) 0%, rgba(155, 110, 235, 0.28) 45%, transparent 75%);
 }
 
 .teamo-flash.flash-active {
-  animation: flashPulse 1.4s ease-out forwards;
+  animation: flashPulseSeries 5s ease-in-out forwards;
 }
 
 /* Estrellas fugaces */
@@ -1178,15 +1202,85 @@ main {
   animation: cosmicSparkleAnim cubic-bezier(0.12, 0.75, 0.35, 1) forwards;
 }
 
+@keyframes flashPulseSeries {
+
+  /* Destello 1 */
+  0% {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+
+  6% {
+    opacity: 0.95;
+    transform: scale(1.02);
+  }
+
+  14% {
+    opacity: 0;
+    transform: scale(1.06);
+  }
+
+  /* Destello 2 */
+  20% {
+    opacity: 0.85;
+    transform: scale(1.01);
+  }
+
+  28% {
+    opacity: 0;
+    transform: scale(1.05);
+  }
+
+  /* Destello 3 */
+  34% {
+    opacity: 0.9;
+    transform: scale(1.02);
+  }
+
+  42% {
+    opacity: 0;
+    transform: scale(1.06);
+  }
+
+  /* Destello 4 */
+  48% {
+    opacity: 0.8;
+    transform: scale(1.01);
+  }
+
+  56% {
+    opacity: 0;
+    transform: scale(1.05);
+  }
+
+  /* Destello 5 */
+  62% {
+    opacity: 0.75;
+    transform: scale(1.02);
+  }
+
+  72% {
+    opacity: 0;
+    transform: scale(1.08);
+  }
+
+  100% {
+    opacity: 0;
+    transform: scale(1.1);
+  }
+}
+
 @keyframes flashPulse {
   0% {
     opacity: 0.9;
     transform: scale(0.96);
   }
+
   40% {
     opacity: 0.7;
     transform: scale(1.02);
   }
+
   100% {
     opacity: 0;
     transform: scale(1.1);
@@ -1198,13 +1292,16 @@ main {
     transform: scale(0.3);
     opacity: 0;
   }
+
   60% {
     transform: scale(1.18);
     opacity: 1;
   }
+
   80% {
     transform: scale(0.95);
   }
+
   100% {
     transform: scale(1);
     opacity: 1;
@@ -1217,6 +1314,7 @@ main {
     transform: scale(0.85) translateY(18px);
     filter: blur(8px);
   }
+
   100% {
     opacity: 1;
     transform: scale(1) translateY(0);
@@ -1229,12 +1327,15 @@ main {
     transform: rotate(var(--angle, 35deg)) translateX(0);
     opacity: 0;
   }
+
   15% {
     opacity: 1;
   }
+
   75% {
     opacity: 0.9;
   }
+
   100% {
     transform: rotate(var(--angle, 35deg)) translateX(550px);
     opacity: 0;
@@ -1246,12 +1347,15 @@ main {
     opacity: 0;
     transform: translate(-50%, -50%) translate(0, 0) scale(0.2) rotate(0deg);
   }
+
   25% {
     opacity: 1;
   }
+
   75% {
     opacity: 0.8;
   }
+
   100% {
     opacity: 0;
     transform: translate(-50%, -50%) translate(var(--tx), var(--ty)) scale(var(--scale-end, 1)) rotate(180deg);
