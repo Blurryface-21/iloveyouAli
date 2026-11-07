@@ -81,11 +81,87 @@
   const musicToggle = document.getElementById("musicToggle");
   const musicLabel = document.getElementById("musicLabel");
 
+  // Elementos del reproductor interactivo
+  const audioPlayerCard = document.getElementById("audioPlayerCard");
+  const playerPeekTab = document.getElementById("playerPeekTab");
+  const playerCoverArt = document.getElementById("playerCoverArt");
+  const playerTrackName = document.getElementById("playerTrackName");
+  const playerArtistName = document.getElementById("playerArtistName");
+  const playerProgressBar = document.getElementById("playerProgressBar");
+  const playerCurrentTime = document.getElementById("playerCurrentTime");
+  const playerDuration = document.getElementById("playerDuration");
+  const playerVolumeSlider = document.getElementById("playerVolumeSlider");
+  const playerVolIcon = document.getElementById("playerVolIcon");
+
+  let isUserSeeking = false;
+  let autoDockTimer = null;
+
+  function startAutoDockTimer() {
+    clearTimeout(autoDockTimer);
+    const currentAudio = getActiveAudio();
+    if (!currentAudio || currentAudio.paused) return;
+
+    autoDockTimer = setTimeout(() => {
+      // Si el usuario no está interactuando activamente con la barra
+      if (!isUserSeeking && audioPlayerCard && audioPlayerCard.classList.contains("active")) {
+        audioPlayerCard.classList.add("docked");
+      }
+    }, 5000);
+  }
+
+  function undockPlayer() {
+    clearTimeout(autoDockTimer);
+    if (audioPlayerCard) {
+      audioPlayerCard.classList.remove("docked");
+    }
+    startAutoDockTimer();
+  }
+
+  function formatTime(seconds) {
+    if (isNaN(seconds) || seconds < 0) return "0:00";
+    const mins = Math.floor(seconds / 60);
+    const secs = Math.floor(seconds % 60);
+    return `${mins}:${secs < 10 ? "0" : ""}${secs}`;
+  }
+
   function getActiveAudio() {
     if (celebrationAudio && (!celebrationAudio.paused || celebrationAudio.currentTime > 0)) {
       return celebrationAudio;
     }
     return audio;
+  }
+
+  function getActiveTrackInfo() {
+    const cur = getActiveAudio();
+    if (cur === celebrationAudio) {
+      return { title: "Robot Voices", artist: "Twenty One Pilots", cover: "assets/breach.jpg" };
+    }
+    return { title: "Lovebomb", artist: "The Neighbourhood", cover: "assets/ultrasound.jpg" };
+  }
+
+  function updateMusicPlayerUI() {
+    const currentAudio = getActiveAudio();
+    if (!currentAudio) return;
+
+    const trackInfo = getActiveTrackInfo();
+    if (playerTrackName) {
+      playerTrackName.textContent = trackInfo.title;
+    }
+    if (playerArtistName) {
+      playerArtistName.textContent = trackInfo.artist;
+    }
+    if (playerCoverArt && playerCoverArt.getAttribute("src") !== trackInfo.cover) {
+      playerCoverArt.src = trackInfo.cover;
+    }
+
+    if (!isUserSeeking && playerProgressBar && playerCurrentTime && currentAudio.duration) {
+      const progress = (currentAudio.currentTime / currentAudio.duration) * 100;
+      playerProgressBar.value = progress || 0;
+      playerCurrentTime.textContent = formatTime(currentAudio.currentTime);
+      playerDuration.textContent = formatTime(currentAudio.duration);
+    } else if (playerDuration && currentAudio.duration) {
+      playerDuration.textContent = formatTime(currentAudio.duration);
+    }
   }
 
   function updateMusicButtonState() {
@@ -94,12 +170,122 @@
       musicToggle.classList.add("playing");
       musicToggle.setAttribute("aria-pressed", "true");
       musicLabel.textContent = "Pausar música";
+      if (audioPlayerCard) {
+        audioPlayerCard.classList.add("active");
+        audioPlayerCard.setAttribute("aria-hidden", "false");
+      }
+      updateMusicPlayerUI();
+      startAutoDockTimer();
     } else {
+      clearTimeout(autoDockTimer);
       musicToggle.classList.remove("playing");
       musicToggle.setAttribute("aria-pressed", "false");
       musicLabel.textContent = "Activar música";
+      if (audioPlayerCard) {
+        audioPlayerCard.classList.remove("active", "docked");
+        audioPlayerCard.setAttribute("aria-hidden", "true");
+      }
     }
   }
+
+  // Interacción al hacer clic en la pestaña o en la tarjeta acoplada
+  if (audioPlayerCard) {
+    audioPlayerCard.addEventListener("click", (e) => {
+      if (audioPlayerCard.classList.contains("docked")) {
+        e.stopPropagation();
+        undockPlayer();
+      }
+    });
+
+    // Reiniciar temporizador si el usuario interactúa con los controles
+    audioPlayerCard.addEventListener("touchstart", () => {
+      if (!audioPlayerCard.classList.contains("docked")) {
+        startAutoDockTimer();
+      }
+    }, { passive: true });
+
+    audioPlayerCard.addEventListener("mouseenter", () => {
+      clearTimeout(autoDockTimer);
+    });
+
+    audioPlayerCard.addEventListener("mouseleave", () => {
+      if (audioPlayerCard.classList.contains("active") && !audioPlayerCard.classList.contains("docked")) {
+        startAutoDockTimer();
+      }
+    });
+  }
+
+  // Eventos de barra de progreso
+  if (playerProgressBar) {
+    playerProgressBar.addEventListener("input", () => {
+      isUserSeeking = true;
+      const currentAudio = getActiveAudio();
+      if (currentAudio && currentAudio.duration) {
+        const seekTime = (playerProgressBar.value / 100) * currentAudio.duration;
+        playerCurrentTime.textContent = formatTime(seekTime);
+      }
+    });
+
+    playerProgressBar.addEventListener("change", () => {
+      const currentAudio = getActiveAudio();
+      if (currentAudio && currentAudio.duration) {
+        currentAudio.currentTime = (playerProgressBar.value / 100) * currentAudio.duration;
+      }
+      isUserSeeking = false;
+    });
+  }
+
+  // Control de volumen sincronizado
+  if (playerVolumeSlider) {
+    playerVolumeSlider.addEventListener("input", (e) => {
+      const vol = parseFloat(e.target.value);
+      if (audio) audio.volume = vol;
+      if (celebrationAudio) celebrationAudio.volume = vol;
+      if (playerVolIcon) {
+        if (vol === 0) playerVolIcon.textContent = "🔇";
+        else if (vol < 0.5) playerVolIcon.textContent = "🔉";
+        else playerVolIcon.textContent = "🔊";
+      }
+    });
+  }
+
+  if (playerVolIcon) {
+    playerVolIcon.addEventListener("click", () => {
+      const currentAudio = getActiveAudio();
+      if (!currentAudio) return;
+      if (currentAudio.volume > 0) {
+        currentAudio.dataset.prevVolume = currentAudio.volume;
+        if (audio) audio.volume = 0;
+        if (celebrationAudio) celebrationAudio.volume = 0;
+        playerVolumeSlider.value = 0;
+        playerVolIcon.textContent = "🔇";
+      } else {
+        const restored = parseFloat(currentAudio.dataset.prevVolume || 1);
+        if (audio) audio.volume = restored;
+        if (celebrationAudio) celebrationAudio.volume = restored;
+        playerVolumeSlider.value = restored;
+        playerVolIcon.textContent = restored < 0.5 ? "🔉" : "🔊";
+      }
+    });
+  }
+
+  // Actualizar tiempos en tiempo real cuando se reproduce
+  [audio, celebrationAudio].forEach(track => {
+    if (!track) return;
+    track.addEventListener("timeupdate", () => {
+      if (getActiveAudio() === track) {
+        updateMusicPlayerUI();
+      }
+    });
+    track.addEventListener("loadedmetadata", () => {
+      if (getActiveAudio() === track) {
+        updateMusicPlayerUI();
+      }
+    });
+    track.addEventListener("play", updateMusicButtonState);
+    track.addEventListener("pause", updateMusicButtonState);
+    track.addEventListener("ended", updateMusicButtonState);
+  });
 
   if (btnYes) {
     btnYes.addEventListener("click", () => {

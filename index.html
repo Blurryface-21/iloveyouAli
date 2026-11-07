@@ -25,10 +25,40 @@
     <a class="wordmark" href="#" aria-label="Volver al inicio" id="homeLink">
       <span class="wordmark-star">✳</span>
     </a>
-    <button class="music-toggle" id="musicToggle" type="button" aria-pressed="false">
-      <span class="music-icon" aria-hidden="true">♫</span>
-      <span id="musicLabel">Activar música</span>
-    </button>
+    <div class="music-widget">
+      <button class="music-toggle" id="musicToggle" type="button" aria-pressed="false">
+        <span class="music-icon" aria-hidden="true">♫</span>
+        <span id="musicLabel">Activar música</span>
+      </button>
+
+      <!-- Panel de reproducción desplegable debajo del botón -->
+      <div class="audio-player-card" id="audioPlayerCard" aria-hidden="true">
+        <div class="player-peek-tab" id="playerPeekTab" aria-label="Abrir reproductor" title="Abrir reproductor">
+          <span class="peek-icon">♫</span>
+        </div>
+        <div class="player-header">
+          <img class="player-cover-art" id="playerCoverArt" src="assets/ultrasound.jpg" alt="Carátula de la canción">
+          <div class="player-track-info">
+            <span class="player-track-name" id="playerTrackName">Lovebomb</span>
+            <span class="player-artist-name" id="playerArtistName">The Neighbourhood</span>
+          </div>
+          <span class="player-wave"><span></span><span></span><span></span></span>
+        </div>
+        
+        <div class="player-progress-container">
+          <input type="range" class="player-progress-bar" id="playerProgressBar" min="0" max="100" value="0" step="0.1" aria-label="Línea de tiempo de la canción">
+          <div class="player-times">
+            <span id="playerCurrentTime">0:00</span>
+            <span id="playerDuration">0:00</span>
+          </div>
+        </div>
+
+        <div class="player-volume-container">
+          <span class="player-vol-icon" id="playerVolIcon" aria-hidden="true">🔊</span>
+          <input type="range" class="player-volume-slider" id="playerVolumeSlider" min="0" max="1" step="0.01" value="1" aria-label="Control de volumen">
+        </div>
+      </div>
+    </div>
   </header>
 
   <main>
