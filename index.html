@@ -1,0 +1,204 @@
+<!doctype html>
+<html lang="es">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#070b1c">
+  <meta name="description" content="Una pequeña travesía entre estrellas y coincidencias.">
+  <title>i love you Ali</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400;1,500&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+  <canvas id="starfield" aria-hidden="true"></canvas>
+  <div class="nebula nebula-one" aria-hidden="true"></div>
+  <div class="nebula nebula-two" aria-hidden="true"></div>
+  <div class="grain" aria-hidden="true"></div>
+
+  <header class="topbar">
+    <a class="wordmark" href="#" aria-label="Volver al inicio" id="homeLink">
+      <span class="wordmark-star">✳</span>
+    </a>
+    <button class="music-toggle" id="musicToggle" type="button" aria-pressed="false">
+      <span class="music-icon" aria-hidden="true">♫</span>
+      <span id="musicLabel">Activar música</span>
+    </button>
+  </header>
+
+  <main>
+    <!-- INTRO -->
+    <section class="screen active" id="intro" aria-labelledby="introTitle">
+      <div class="intro-orbit orbit-a"></div>
+      <div class="intro-orbit orbit-b"></div>
+      <div class="intro-content">
+        <div class="hero-planet" aria-hidden="true">
+          <div class="planet-halo"></div>
+          <div class="planet"></div>
+          <span class="planet-spark spark-one">✦</span>
+          <span class="planet-spark spark-two">✧</span>
+          <span class="planet-spark spark-three">·</span>
+        </div>
+        <h1 id="introTitle" class="hero-title reveal delay-1">Tengo tantas cosas que decirte,<br><em>así que hice esto
+            para tí.</em></h1>
+        <p class="hero-copy reveal delay-2">El universo es inmenso.<br>Pero no lo es tanto como todo lo que siento por
+          tí.</p>
+        <button class="primary-button reveal delay-3" id="beginButton" type="button">
+          <span>Comenzar el viaje</span><span class="button-arrow">↗</span>
+        </button>
+        <p class="tiny-note reveal delay-3">CON AMOR PARA ALI</p>
+      </div>
+    </section>
+
+    <!-- JOURNEY -->
+    <section class="screen" id="journey" aria-labelledby="journeyTitle">
+      <div class="section-wrap journey-wrap">
+        <div class="journey-visual" aria-hidden="true">
+          <div class="journey-ring ring-one"></div>
+          <div class="journey-ring ring-two"></div>
+          <div class="journey-core"><span>✦</span></div>
+          <div class="orbit-dot dot-one"></div>
+          <div class="orbit-dot dot-two"></div>
+        </div>
+        <h2 id="journeyTitle" class="section-title">El universo está lleno<br>de <em>casualidades.</em></h2>
+        <p class="body-copy secondary-copy">No sé si llamarlo destino, suerte o una bonita
+          casualidad… pero me alegra que nuestros caminos se hayan cruzado.</p>
+        <button class="text-button" id="toConstellation" type="button">Hay algo que quiero mostrarte
+          <span>→</span></button>
+      </div>
+    </section>
+
+    <!-- CONSTELLATION -->
+    <section class="screen" id="constellation" aria-labelledby="constellationTitle">
+      <div class="section-wrap constellation-wrap">
+        <h2 id="constellationTitle" class="section-title compact-title">Una constelación<br><em>de las cosas que más me
+            gustan de tí.</em></h2>
+        <p class="body-copy constellation-intro">Toca cada una para descubrirlas.</p>
+
+        <div class="sky-map" id="skyMap">
+          <svg class="constellation-lines" viewBox="0 0 340 300" preserveAspectRatio="none" aria-hidden="true">
+            <!-- Constelación de Tauro: Cuernos (Elnath y Tianguan) hacia las Híades/Aldebarán, y cuerpo/Pléyades -->
+            <path d="M60 48 L170 148" />
+            <path d="M72 118 L204 165" />
+            <path d="M170 148 L204 165 L215 210 L160 215 Z" />
+            <path d="M204 165 L272 155" />
+          </svg>
+          <!-- N1: Elnath (Punta del cuerno norte) -->
+          <button class="star-node node-1"
+            data-message="Me encanta cómo puedes hacer que una conversación sencilla termine siendo uno de los mejores momentos del día."
+            aria-label="Descubrir mensaje uno"><span></span></button>
+          <!-- N2: Tianguan / Zeta Tauri (Punta del cuerno sur) -->
+          <button class="star-node node-2" data-message="Me encanta la forma en la que te apasionas por tus aficiones."
+            aria-label="Descubrir mensaje dos"><span></span></button>
+          <!-- N3: Aldebarán (El ojo rojo del toro en las Híades) -->
+          <button class="star-node node-3"
+            data-message="Me encantan tus hermosos ojitos, quiero mirarlos y que me miren por siempre."
+            aria-label="Descubrir mensaje tres"><span></span></button>
+          <!-- N4: Gamma Tauri / Hyades vértice -->
+          <button class="star-node node-4"
+            data-message="Me encanta como pasamos de hablarnos super bonito, a decirnos cosas tan... ya sabes jsajkaj"
+            aria-label="Descubrir mensaje cuatro"><span></span></button>
+          <!-- N5: Lambda Tauri / Hyades base -->
+          <button class="star-node node-5"
+            data-message="Amo que a pesar de ambos tener problemas emocionales, nos estemos esforzando por ser cada día mejores y algún día solo sean simples recuerdos"
+            aria-label="Descubrir mensaje cinco"><span></span></button>
+          <!-- N6: Pléyades / Lomo de Tauro -->
+          <button class="star-node node-6"
+            data-message="Simplemente amo tu forma de ser, tu forma de tratarme y amarme."
+            aria-label="Descubrir mensaje seis"><span></span></button>
+          <span class="map-caption">TOCA LAS ESTRELLAS</span>
+        </div>
+
+        <div class="discovery-status" aria-live="polite">
+          <span class="status-count" id="discoveryCount">0 / 6</span>
+          <span class="status-track"><span id="progressFill"></span></span>
+          <span class="status-label">descubiertas</span>
+        </div>
+        <p class="unlock-hint" id="unlockHint">Hay una última parte esperando al otro lado de estas estrellas.</p>
+        <button class="primary-button disabled-button" id="toLetter" type="button" disabled>
+          <span>Continuar</span><span class="button-arrow">↗</span>
+        </button>
+      </div>
+    </section>
+
+    <!-- LETTER -->
+    <section class="screen" id="letter" aria-labelledby="letterTitle">
+      <div class="section-wrap letter-wrap">
+        <div class="letter-card">
+          <div class="letter-decoration" aria-hidden="true">✧</div>
+          <h2 id="letterTitle" class="letter-heading">Hay algo que<br><em>quería decirte.</em></h2>
+          <div class="letter-rule"><span>✦</span></div>
+          <div class="letter-body" id="letterBody">
+            <p>Ali,</p>
+            <p>La verdad no sé como iniciar esto, ya que es la primera vez que vuelvo a sentir algo así con alguien,
+              además que quiero hacer algo diferente. Me es muy difícil encontrar las palabras adecuadas para expresarte
+              algo tan complejo como lo mucho que me haces sentir.
+              Me sigue pareciendo algo tan irreal el hecho de que alguien como tú quiera estar conmigo, en verdad eres
+              la mujer que siempre soñé y no me canso de hacértelo saber.</p>
+            <p>Coincidir contigo ha sido lo mejor que me ha pasado en la vida, es increíble todo lo que tuvimos que
+              vivir
+              ambos solo para llegar a este momento, y sé más que nadie que no fue fácil. Soy fiel creyente en que el
+              universo nos hizo coincidir, y mi amor por ti es igual de inmenso que él.</p>
+            <p>Sé que estamos yendo algo rápido, pero no puedo evitar imaginarme toda mi vida a tu ladito.
+              Tener un hogar y una familia contigo es mi mayor sueño, y espero que sea el tuyo también c:</p>
+            <p>Tal vez es muy pronto para decírtelo, pero cada que hablo contigo me aguanto las ganas de decirte
+              "te amo", pero ya no soporto más, quiero decírtelo todos los días de mi vida</p>
+            <p class="letter-signoff">Con amor,</p>
+            <p class="signature">Yael <span>✦</span></p>
+          </div>
+        </div>
+        <button class="final-link" id="finalButton" type="button">Una última cosa… <span>→</span></button>
+      </div>
+    </section>
+
+    <!-- FINALE -->
+    <section class="screen" id="finale" aria-labelledby="finalTitle">
+      <div class="finale-content">
+        <div class="final-heart" aria-hidden="true"><span>✦</span></div>
+        <p class="eyebrow">Una ultima cosa... quiero saber si tu...</p>
+        <h2 id="finalTitle" class="final-title">¿Quieres ser mi<br><em>novia?</em></h2>
+        <div class="final-divider"><span>✧</span></div>
+        <div class="proposal-actions" id="proposalActions">
+          <button class="primary-button answer-btn answer-yes" id="btnYes" type="button">
+            <span>Sí</span><span class="button-arrow">❤</span>
+          </button>
+          <button class="primary-button answer-btn answer-no" id="btnNo" type="button">
+            <span>No</span>
+          </button>
+        </div>
+      </div>
+      <div class="confetti-stars" id="confettiStars" aria-hidden="true"></div>
+    </section>
+
+    <!-- TE AMO -->
+    <section class="screen" id="teAmo" aria-labelledby="teAmoTitle">
+      <div class="finale-content">
+        <div class="final-heart" aria-hidden="true"><span>❤</span></div>
+        <h2 id="teAmoTitle" class="final-title">¡Te <em>Amo!</em></h2>
+        <p class="final-copy">Prometo hacerte sonreír cada día y cuidar siempre de nosotros.</p>
+        <div class="final-divider"><span>✧</span></div>
+        <p class="final-signature">Por siempre</p>
+        <button class="restart-button" id="restartButton" type="button">Volver al inicio</button>
+      </div>
+    </section>
+  </main>
+
+  <div class="message-modal" id="messageModal" role="dialog" aria-modal="true" aria-labelledby="modalText" hidden>
+    <button class="modal-backdrop" id="closeModalBackdrop" aria-label="Cerrar mensaje" type="button"></button>
+    <div class="message-panel">
+      <span class="modal-star">✦</span>
+      <p id="modalText" class="modal-message"></p>
+      <button class="modal-close" id="closeModal" type="button">Siguiente</button>
+    </div>
+  </div>
+
+  <audio id="backgroundMusic" src="assets/08 - Lovebomb.mp3" loop preload="none"></audio>
+  <script src="script.js"></script>
+</body>
+
+</html>
